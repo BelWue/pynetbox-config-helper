@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "pynetbox-argparse"
+version = "0.1.0"
+description = "A config-file/cli/environment variable wrapper for pynetbox"
+authors = ["Johannes Erwerle <erwerle@belwue.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pynetbox = "^7.2.0"
+platformdirs = "^4.1.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+coverage = "^7.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

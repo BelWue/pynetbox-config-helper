@@ -20,12 +20,14 @@ import pynetbox
 parser = build_argparser()  # this returns an ArgumentParser which you can extend further
 settings = resolve_config(parser.parse_args())  # you get your config settings
 
-nb = pynetbox.API(**settings)  # you get your pynetbox API instance
-... you do your things
+nb = pynetbox.api(**settings)  # you get your pynetbox API instance
+# ... you do your things
 ```
 
 Now you place a config file in your config directory
-(`~/.config/pynetbox/config.ini` on Linux, other paths on other systems).
+(`~/.config/pynetbox_config_helper/config.ini` on Linux,
+other paths on other systems, see
+[Section Location of the config file](#location-of-the-config-file).
 That config may contain multiple NetBox instances:
 
 ```ini
@@ -65,3 +67,26 @@ Generally commandline arguments are preferred over environment variables which
 are preferred over configuration settings.
 You can even specify the URL and Token via commandline arguments or environment
 variables and don't even need a config file.
+
+## Location of the config file
+
+The default config file location is OS dependant.
+Internally we use [platformdirs](https://pypi.org/project/platformdirs/)
+to find the `user_config_dir`.
+
+On different systems this resolves to:
+
+### Linux
+```
+~/.config/pynetbox_config_helper/config.ini
+```
+
+### MacOS
+```
+/Users/trentm/Library/pynetbox_config_helper/config.ini
+```
+
+### Windows
+```
+C:\Users\trentm\AppData\Local\pynetbox_config_helper\config.ini
+```

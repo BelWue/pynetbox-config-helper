@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pynetbox-argparse"
+name = "pynetbox-config-helper"
 version = "0.1.0"
 description = "A config-file/cli/environment variable wrapper for pynetbox"
 authors = ["Johannes Erwerle <erwerle@belwue.de>"]

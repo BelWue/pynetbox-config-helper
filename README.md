@@ -1,9 +1,9 @@
-# pynetbox-argparse
+# pynetbox-config-helper
 
 A command argument, Environment variable and config file parser wrapper for
 [pynetbox](https://github.com/netbox-community/pynetbox).
 
-pynetbox-argparse allows you to easily read the config parameters needed for
+pynetbox-config-helper allows you to easily read the config parameters needed for
 pynetbox (a URL and a token) from command arguments, environment variables
 and a config file, so that you dont have to repeat that code for every script
 you write and get a uniform interface for all your scripts.
@@ -14,7 +14,7 @@ Your code could look like this
 
 ```python
 
-from pynetbox_argparse import build_argparser, resolve_config
+from pynetbox_config_helper import build_argparser, resolve_config
 import pynetbox
 
 parser = build_argparser()  # this returns an ArgumentParser which you can extend further

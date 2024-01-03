@@ -1,4 +1,4 @@
-from pynetbox_argparse import resolve_config, build_argparser, ConfigError
+from pynetbox_config_helper import resolve_config, build_argparser, ConfigError
 from os import environ
 from pytest import fixture
 import pytest

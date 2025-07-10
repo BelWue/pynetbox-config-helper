@@ -90,3 +90,17 @@ On different systems this resolves to:
 ```
 C:\Users\trentm\AppData\Local\pynetbox_config_helper\config.ini
 ```
+
+# Development
+
+## Setup
+
+This project uses [poetry](https://python-poetry.org/) for development.
+Clone this repository and run `poetry install --with=dev` to create a virtual environment and install the dependencies, including development dependencies
+
+## Testing
+
+To  run the tests, execute `poetry run pytest`.
+
+To generate code coverage reports, run `poetry run coverage run` to generate coverage reports and `poetry run coverage html`to render them to HTML.
+The resulting report is stored in `htmlcov/index.html`

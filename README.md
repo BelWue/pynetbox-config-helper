@@ -83,12 +83,12 @@ On different systems this resolves to:
 
 ### MacOS
 ```
-/Users/trentm/Library/pynetbox_config_helper/config.ini
+/Users/youruser/Library/pynetbox_config_helper/config.ini
 ```
 
 ### Windows
 ```
-C:\Users\trentm\AppData\Local\pynetbox_config_helper\config.ini
+C:\Users\youruser\AppData\Local\pynetbox_config_helper\config.ini
 ```
 
 # Development

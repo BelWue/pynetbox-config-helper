@@ -21,3 +21,9 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip poetry
       - run: ls
+      - name: install package
+        run: poetry install --with=dev
+      - name: run tests
+        run: poetry run coverage run
+      - name: build report
+        run: poetry run coverage report

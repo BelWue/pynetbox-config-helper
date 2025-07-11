@@ -73,147 +73,6 @@ def clear_env():
             pass
 
 
-def test_commandline_args_only(parser):
-    args = parser.parse_args([
-        "--url",
-        "https://test.example.com/api",
-        "--token",
-        "1234567890abcdef",
-    ])
-    config = resolve_config(args)
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_environment_args_only():
-    parser = build_argparser()
-    args = parser.parse_args([])
-    environ["NETBOX_URL"] = "https://test.example.com/api"
-    environ["NETBOX_TOKEN"] = "1234567890abcdef"
-    config = resolve_config(args)
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_commandline_environment_args_1():
-    parser = build_argparser()
-    args = parser.parse_args(["--url", "https://test.example.com/api"])
-    environ["NETBOX_TOKEN"] = "1234567890abcdef"
-    config = resolve_config(args)
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_commandline_environment_args_2():
-    parser = build_argparser()
-    args = parser.parse_args(["--token", "1234567890abcdef"])
-    environ["NETBOX_URL"] = "https://test.example.com/api"
-    config = resolve_config(args)
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_config_file_default(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file)])
-    config = resolve_config(args)
-
-    assert config == {
-        "url": "https://prod.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_config_file_from_env(clear_env, config_file, parser):
-    args = parser.parse_args([])
-    environ["NETBOX_CONFIG"] = str(config_file)
-    config = resolve_config(args)
-
-    assert config == {
-        "url": "https://prod.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_config_file_instance_from_cli(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file), "--instance", "test"])
-    config = resolve_config(args)
-
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "qwertyqwertz12345",
-    }
-
-
-def test_config_file_instance_from_env(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file)])
-    environ["NETBOX_INSTANCE"] = "test"
-    config = resolve_config(args)
-
-    assert config == {
-        "url": "https://test.example.com/api",
-        "token": "qwertyqwertz12345",
-    }
-
-
-def test_config_file_overwrite_token_from_cli(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file), "--token", "test"])
-    config = resolve_config(args)
-
-    assert config == {"url": "https://prod.example.com/api", "token": "test"}
-
-
-def test_config_file_overwrite_token_from_env(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file)])
-    environ["NETBOX_TOKEN"] = "test"
-    config = resolve_config(args)
-
-    assert config == {"url": "https://prod.example.com/api", "token": "test"}
-
-
-def test_config_file_overwrite_token(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file)])
-    environ["NETBOX_TOKEN"] = "test"
-    config = resolve_config(args)
-
-    assert config == {"url": "https://prod.example.com/api", "token": "test"}
-
-
-def test_config_file_overwrite_url(clear_env, config_file, parser):
-    args = parser.parse_args(["--config", str(config_file)])
-    environ["NETBOX_URL"] = "https://overwrite.example.com/api"
-    config = resolve_config(args)
-
-    assert config == {
-        "url": "https://overwrite.example.com/api",
-        "token": "1234567890abcdef",
-    }
-
-
-def test_config_file_instance_not_found(clear_env, config_file, parser):
-    args = parser.parse_args([
-        "--config",
-        str(config_file),
-        "--instance",
-        "doesnotexist",
-    ])
-    with pytest.raises(NoSectionError):
-        resolve_config(args)
-
-
-def test_config_file_no_instance_given(clear_env, no_instance_config_file, parser):
-    args = parser.parse_args(["--config", str(no_instance_config_file)])
-    with pytest.raises(NoOptionError):
-        resolve_config(args)
-
-
 def test_get_instance_name_cmdline_instance(clear_env, parser, config_file):
     args = parser.parse_args(["--instance", "cmdline_instance"])
     config = ConfigParser()
@@ -382,3 +241,43 @@ def test_resolve_graphql_config_no_token(clear_env, no_instance_config_file, par
 
     with pytest.raises(ConfigError):
         resolve_graphql_config(args)
+
+
+def test_resolve_config(clear_env, config_file, parser):
+    args = parser.parse_args([
+        "--url",
+        "https://cmdline.example/api",
+        "--token",
+        "1234cmdline",
+    ])
+
+    config = resolve_config(args)
+
+    assert config == {
+        "url": "https://cmdline.example/api",
+        "token": "1234cmdline",
+    }
+
+
+def test_resolve_config_no_url(clear_env, no_instance_config_file, parser):
+    args = parser.parse_args([
+        "--token",
+        "1234cmdline",
+        "--config",
+        str(no_instance_config_file),
+    ])
+
+    with pytest.raises(ConfigError):
+        resolve_config(args)
+
+
+def test_resolve_config_no_token(clear_env, no_instance_config_file, parser):
+    args = parser.parse_args([
+        "--url",
+        "https://cmdline.example/api",
+        "--config",
+        str(no_instance_config_file),
+    ])
+
+    with pytest.raises(ConfigError):
+        resolve_config(args)

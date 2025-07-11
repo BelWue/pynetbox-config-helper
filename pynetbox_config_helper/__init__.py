@@ -155,54 +155,14 @@ def resolve_graphql_config(args: argparse.Namespace) -> Tuple[str, Dict[str, str
 
 
 def resolve_config(args: argparse.Namespace) -> Dict[str, str]:
-    # get the config file
-    config_file = args.config
-    if not config_file:
-        config_file = environ.get(
-            "NETBOX_CONFIG", Path(user_config_dir(__name__)) / "config.ini"
-        )
+    settings = resolve_settings(args)
 
-    # populate the settings for pynetbox
-    settings = dict()
+    endpoint = settings.get("url")
+    if endpoint is None:
+        raise ConfigError("Endpoint could not be found in the configuration")
 
-    # settings from command line arguments
-    settings["url"] = args.url
-    settings["token"] = args.token
+    token = settings.get("token")
+    if token is None:
+        raise ConfigError("API token could not be found in the configuration")
 
-    if settings["url"] and settings["token"]:
-        return settings
-
-    # settings from the environment variables
-    if not settings["url"]:
-        settings["url"] = environ.get("NETBOX_URL")
-    if not settings["token"]:
-        settings["token"] = environ.get("NETBOX_TOKEN")
-
-    if settings["url"] and settings["token"]:
-        return settings
-
-    # parse the config file
-    config = ConfigParser()
-
-    config.read(config_file)
-
-    # determine instance arg > env > config
-    instance = None
-    for option in [
-        args.instance,
-        environ.get("NETBOX_INSTANCE"),
-        config.get("Main", "Instance"),
-    ]:
-        if option:
-            instance = option
-            break
-
-    if not settings["url"]:
-        settings["url"] = config.get(instance, "URL")
-    if not settings["token"]:
-        settings["token"] = config[instance].get("token")
-
-    assert settings["url"], f"Could not determine URL for instance '{instance}'"
-    assert settings["token"], f"Could not determine token for instance '{instance}'"
-
-    return settings
+    return {"url": endpoint, "token": token}

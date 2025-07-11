@@ -1,7 +1,7 @@
 # pynetbox-config-helper
 
 A command argument, Environment variable and config file parser wrapper for
-[pynetbox](https://github.com/netbox-community/pynetbox).
+[pynetbox](https://github.com/netbox-community/pynetbox) and GraphQL endpoints.
 
 pynetbox-config-helper allows you to easily read the config parameters needed for
 pynetbox (a URL and a token) from command arguments, environment variables
@@ -23,6 +23,21 @@ settings = resolve_config(parser.parse_args())  # you get your config settings
 nb = pynetbox.api(**settings)  # you get your pynetbox API instance
 # ... you do your things
 ```
+
+Alternativly you can use this library to return the settings for a GraphQL API:
+
+
+```python
+
+from pynetbox_config_helper import build_argparser, resolve_graphql_config
+import pynetbox
+
+parser = build_argparser()  # this returns an ArgumentParser which you can extend further
+endpoint, headers = resolve_graphql_config(parser.parse_args())  # you get your endpoint and headers
+
+# ... you do your things
+```
+
 
 Now you place a config file in your config directory
 (`~/.config/pynetbox_config_helper/config.ini` on Linux,
@@ -83,10 +98,24 @@ On different systems this resolves to:
 
 ### MacOS
 ```
-/Users/trentm/Library/pynetbox_config_helper/config.ini
+/Users/youruser/Library/pynetbox_config_helper/config.ini
 ```
 
 ### Windows
 ```
-C:\Users\trentm\AppData\Local\pynetbox_config_helper\config.ini
+C:\Users\youruser\AppData\Local\pynetbox_config_helper\config.ini
 ```
+
+# Development
+
+## Setup
+
+This project uses [poetry](https://python-poetry.org/) for development.
+Clone this repository and run `poetry install --with=dev` to create a virtual environment and install the dependencies, including development dependencies
+
+## Testing
+
+To  run the tests, execute `poetry run pytest`.
+
+To generate code coverage reports, run `poetry run coverage run` to generate coverage reports and `poetry run coverage html`to render them to HTML.
+The resulting report is stored in `htmlcov/index.html`

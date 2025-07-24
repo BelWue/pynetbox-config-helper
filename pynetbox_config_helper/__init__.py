@@ -26,11 +26,13 @@ def expand_argparser(parser: argparse.ArgumentParser):
     Adds the "--instance", "--config", "--url", "--graphql-url" and "--token" options to `parser`.
     """
 
-    parser.add_argument("--instance", help="the name of the instance to use")
-    parser.add_argument("--config", help="the config file to use")
-    parser.add_argument("--url", help="the URL of the NetBox API endpoint")
-    parser.add_argument("--token", help="the token for the NetBox REST API")
-    parser.add_argument("--graphql-url", help="The URL for the GraphQL endpoint")
+    netbox_group = parser.add_argument_group("pyNetBox Config Helper")
+
+    netbox_group.add_argument("--instance", help="the name of the instance to use")
+    netbox_group.add_argument("--config", help="the config file to use")
+    netbox_group.add_argument("--url", help="the URL of the NetBox API endpoint")
+    netbox_group.add_argument("--token", help="the token for the NetBox REST API")
+    netbox_group.add_argument("--graphql-url", help="The URL for the GraphQL endpoint")
 
 
 def build_argparser() -> argparse.ArgumentParser:
